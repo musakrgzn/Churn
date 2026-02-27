@@ -3,79 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yapay Zeka Müşteri Analizi</title>
+    <title>Telekom Yönetim Dashboard'u</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { background-color: #f8f9fa; }
-        .card { box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 10px; }
-        .sonuc-kutusu { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; }
-        .riskli { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
-        .guvenli { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        body { 
+            background-color: #f0f2f5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card { 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            border: none; 
+            border-radius: 12px; 
+        }
+        .nav-tabs { border-bottom: 2px solid #e9ecef; }
+        .nav-tabs .nav-link { color: #6c757d; font-weight: 500; border: none; }
+        .nav-tabs .nav-link.active { 
+            font-weight: bold; 
+            color: #1D3557; 
+            border-bottom: 3px solid #1D3557; 
+            background: transparent;
+        }
+        .sonuc-kutusu { display: none; margin-top: 20px; padding: 20px; border-radius: 8px; text-align: left; }
+        .riskli { background-color: #fdf5f6; color: #E63946; border: 1px solid #fadbdc; }
+        .guvenli { background-color: #f2f5f8; color: #1D3557; border: 1px solid #d5dfe6; }
+        .oran-badge { font-size: 1.1rem; float: right; }
+        
+        /* Tablo Stilleri */
+        .table-gecmis th { background-color: #f8f9fa; color: #495057; font-weight: 600; }
+        .table-gecmis td { vertical-align: middle; }
     </style>
 </head>
 <body>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card p-4">
-                <h3 class="text-center mb-4 text-primary">Müşteri Ayrılma (Churn) Tahmini</h3>
+<div class="container mt-4 mb-5">
+    <h2 class="mb-4 text-center fw-bold" style="color: #1D3557;">Yapay Zeka Analiz Merkezi</h2>
+
+    <ul class="nav nav-tabs justify-content-center mb-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tekil-tab" data-bs-toggle="tab" data-bs-target="#tekil" type="button" role="tab">Tekil Müşteri & Veritabanı</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="toplu-tab" data-bs-toggle="tab" data-bs-target="#toplu" type="button" role="tab">Kurumsal Dashboard (CSV)</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        
+        <div class="tab-pane fade show active" id="tekil" role="tabpanel">
+            <div class="row justify-content-center">
                 
-                <form id="churnForm">
-                    <div class="mb-3">
-                        <label class="form-label">Aylık Fatura Tutarı (TL)</label>
-                        <input type="number" class="form-control" id="fatura" placeholder="Örn: 120" required>
+                <div class="col-md-5">
+                    <div class="card p-4 h-100">
+                        <h5 class="mb-4 text-secondary">Müşteri Risk Profili Oluşturma</h5>
+                        <form id="churnForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-muted small">Aylık Fatura (TL)</label>
+                                    <input type="number" class="form-control form-control-sm" id="fatura" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-muted small">Süre (Ay)</label>
+                                    <input type="number" class="form-control form-control-sm" id="sure" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Sözleşme Türü</label>
+                                <select class="form-select form-select-sm" id="sozlesme">
+                                    <option value="Aylik">Aylık Sözleşme</option>
+                                    <option value="Yillik">1 Yıllık Taahhüt</option>
+                                    <option value="Iki_Yillik">2 Yıllık Taahhüt</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-muted small">İnternet Altyapısı</label>
+                                    <select class="form-select form-select-sm" id="internet">
+                                        <option value="Fiber">Fiber</option>
+                                        <option value="ADSL">ADSL</option>
+                                        <option value="Yok">Yok</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-muted small">Teknik Destek?</label>
+                                    <select class="form-select form-select-sm" id="destek">
+                                        <option value="Evet">Evet</option>
+                                        <option value="Hayir">Hayır</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn text-white w-100 mt-2" style="background-color: #1D3557;">Analiz Et ve Kaydet</button>
+                        </form>
+
+                        <div id="sonucAlani" class="sonuc-kutusu mt-3 p-3">
+                            <h6 id="tahminMetni" class="d-inline fw-bold"></h6>
+                            <span id="ihtimalMetni" class="badge oran-badge float-end"></span>
+                            <hr class="my-2">
+                            <ul id="nedenlerListesi" class="mt-1 mb-0 fw-medium small text-muted ps-3"></ul>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Toplam Kullanım Süresi (Ay)</label>
-                        <input type="number" class="form-control" id="sure" placeholder="Örn: 12" required>
+                <div class="col-md-7">
+                    <div class="card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-secondary mb-0">Son Yapılan Tahminler (Veritabanı)</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="gecmisiGetir()">🔄 Yenile</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm table-gecmis border">
+                                <thead>
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Fatura</th>
+                                        <th>Süre</th>
+                                        <th>Sözleşme</th>
+                                        <th>Yapay Zeka Kararı</th>
+                                        <th>Risk</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gecmisTablosu">
+                                    <tr><td colspan="6" class="text-center text-muted py-3">Veriler yükleniyor...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Sözleşme Türü</label>
-                        <select class="form-select" id="sozlesme">
-                            <option value="Aylik">Aylık Sözleşme</option>
-                            <option value="Yillik">1 Yıllık Taahhüt</option>
-                            <option value="Iki_Yillik">2 Yıllık Taahhüt</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">İnternet Altyapısı</label>
-                        <select class="form-select" id="internet">
-                            <option value="Fiber">Fiber</option>
-                            <option value="ADSL">ADSL</option>
-                            <option value="Yok">Yok</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Son 1 Ayda Teknik Destek Aradı Mı?</label>
-                        <select class="form-select" id="destek">
-                            <option value="Evet">Evet</option>
-                            <option value="Hayir">Hayır</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 mt-3 fs-5">Yapay Zekaya Sor</button>
-                </form>
-
-                <div id="sonucAlani" class="sonuc-kutusu mt-4">
-                    <h4 id="tahminMetni"></h4>
-                    <p id="ihtimalMetni" class="mb-0"></p>
                 </div>
 
             </div>
         </div>
+
+        <div class="tab-pane fade" id="toplu" role="tabpanel">
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <div class="card p-4 text-center">
+                        <h5 class="mb-3 text-secondary">Müşteri Veritabanını (CSV) Yükleyin</h5>
+                        <div class="d-flex justify-content-center align-items-center gap-3">
+                            <input type="file" id="csvDosyasi" accept=".csv" class="form-control w-50">
+                            <button class="btn text-white px-4" style="background-color: #1D3557;" onclick="topluAnalizBaslat()">Raporu Oluştur</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboardAlani" class="col-md-12" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="card p-3 h-100"><div id="pieChart"></div></div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card p-3 h-100"><div id="boxPlot"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
 <script>
-    document.getElementById("churnForm").addEventListener("submit", async function(event) {
-        event.preventDefault(); 
+    const colorRisk = '#E63946'; 
+    const colorSafe = '#1D3557'; 
 
-        
+    // --- YENİ: VERİTABANINDAN GEÇMİŞİ ÇEKEN FONKSİYON ---
+    async function gecmisiGetir() {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/gecmis");
+            const data = await response.json();
+            const tablo = document.getElementById("gecmisTablosu");
+            
+            if (data.length === 0) {
+                tablo.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">Henüz kaydedilmiş bir analiz yok.</td></tr>';
+                return;
+            }
+
+            tablo.innerHTML = ""; // Yükleniyor yazısını temizle
+
+            data.forEach(kayit => {
+                // Tarihi okunaklı formata çevir (Örn: 24.10.2025 14:30)
+                let tarihObj = new Date(kayit.islem_tarihi);
+                let formatliTarih = tarihObj.toLocaleDateString('tr-TR') + ' ' + tarihObj.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+                
+                // Riskli mi Güvenli mi rozet rengini ayarla
+                let rozetClass = kayit.yapay_zeka_karari.includes("Ayrilacak") ? "bg-danger" : "bg-success";
+                let kararMetni = kayit.yapay_zeka_karari.includes("Ayrilacak") ? "Riskli Profil" : "Güvenli Profil";
+
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="text-muted small">${formatliTarih}</td>
+                    <td>${kayit.aylik_fatura} ₺</td>
+                    <td>${kayit.kullanim_suresi} Ay</td>
+                    <td>${kayit.sozlesme_turu}</td>
+                    <td><span class="badge ${rozetClass}">${kararMetni}</span></td>
+                    <td><strong>${kayit.risk_orani}</strong></td>
+                `;
+                tablo.appendChild(tr);
+            });
+        } catch (error) {
+            console.error("Geçmiş alınırken hata oluştu:", error);
+        }
+    }
+
+    // Sayfa ilk yüklendiğinde geçmişi otomatik çek
+    document.addEventListener("DOMContentLoaded", gecmisiGetir);
+
+
+    // --- TEKİL MÜŞTERİ SORGULAMA ---
+    document.getElementById("churnForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
         const musteriVerisi = {
             "Aylik_Fatura": parseFloat(document.getElementById("fatura").value),
             "Toplam_Kullanim_Ay": parseInt(document.getElementById("sure").value),
@@ -85,7 +222,6 @@
         };
 
         try {
-            
             const response = await fetch("http://127.0.0.1:8000/tahmin_et", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -94,27 +230,96 @@
 
             const data = await response.json();
             
-            
             const sonucAlani = document.getElementById("sonucAlani");
             const tahminMetni = document.getElementById("tahminMetni");
             const ihtimalMetni = document.getElementById("ihtimalMetni");
+            const nedenlerListesi = document.getElementById("nedenlerListesi");
 
-            sonucAlani.style.display = "block"; 
+            sonucAlani.style.display = "block";
+            nedenlerListesi.innerHTML = ""; 
             
             if (data.Sistem_Tahmini === "Ayrilacak (CHURN)") {
                 sonucAlani.className = "sonuc-kutusu riskli";
-                tahminMetni.innerText = "⚠️ DİKKAT: Müşteri Ayrılabilir!";
-                ihtimalMetni.innerText = "Ayrılma İhtimali: " + data.Ayrilma_Ihtimali;
+                tahminMetni.innerText = "⚠️ YÜKSEK RİSK";
+                ihtimalMetni.innerText = data.Ayrilma_Ihtimali;
+                ihtimalMetni.style.backgroundColor = colorRisk;
             } else {
                 sonucAlani.className = "sonuc-kutusu guvenli";
-                tahminMetni.innerText = "✅ GÜVENLİ: Müşteri Kalacak";
-                ihtimalMetni.innerText = "Ayrılma İhtimali: " + data.Ayrilma_Ihtimali;
+                tahminMetni.innerText = "✅ PROFİL GÜVENLİ";
+                ihtimalMetni.innerText = data.Ayrilma_Ihtimali;
+                ihtimalMetni.style.backgroundColor = colorSafe;
             }
 
+            data.Risk_Faktorleri.forEach(faktor => {
+                let li = document.createElement("li");
+                li.innerText = faktor;
+                nedenlerListesi.appendChild(li);
+            });
+
+            // SİHİRLİ DOKUNUŞ: Yeni analiz yapıldığında tabloyu otomatik yenile!
+            gecmisiGetir();
+
         } catch (error) {
-            alert("API'ye bağlanılamadı. Arka planda FastAPI sunucusunun çalıştığından emin olun!");
+            alert("API bağlantı hatası! Sunucunun çalıştığından emin olun.");
         }
     });
+
+    // --- TOPLU ANALİZ VE GRAFİKLER ---
+    async function topluAnalizBaslat() {
+        const fileInput = document.getElementById('csvDosyasi');
+        if (fileInput.files.length === 0) {
+            alert("Lütfen önce bir CSV dosyası seçin!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("dosya", fileInput.files[0]);
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/toplu_tahmin", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            document.getElementById("dashboardAlani").style.display = "block";
+
+            let ayrilacakCount = data.filter(d => d.Tahmin_Sonucu === "Ayrilacak").length;
+            let kalacakCount = data.length - ayrilacakCount;
+            
+            let pieData = [{
+                values: [ayrilacakCount, kalacakCount],
+                labels: ['Riskli Profil', 'Güvenli Profil'],
+                type: 'pie',
+                hole: 0.55,
+                textinfo: 'percent',
+                marker: { colors: [colorRisk, colorSafe], line: { width: 3, color: '#ffffff' } }
+            }];
+            let pieLayout = {
+                title: { text: 'Genel Risk Dağılımı', font: {size: 16, color: '#495057'} },
+                showlegend: true, legend: { orientation: "h", y: -0.1 }, margin: { t: 50, b: 20, l: 20, r: 20 }
+            };
+            Plotly.newPlot('pieChart', pieData, pieLayout, {displayModeBar: false});
+
+            let faturaAyrilan = data.filter(d => d.Tahmin_Sonucu === "Ayrilacak").map(d => d.Aylik_Fatura);
+            let faturaKalan = data.filter(d => d.Tahmin_Sonucu === "Kalacak").map(d => d.Aylik_Fatura);
+
+            let trace1 = { y: faturaAyrilan, type: 'box', name: 'Riskli Müşteriler', marker: {color: colorRisk}, line: {width: 2} };
+            let trace2 = { y: faturaKalan, type: 'box', name: 'Güvenli Müşteriler', marker: {color: colorSafe}, line: {width: 2} };
+            
+            let boxLayout = {
+                title: { text: 'Aylık Faturaya Göre Segmentasyon', font: {size: 16, color: '#495057'} },
+                yaxis: { title: 'Aylık Fatura (TL)', gridcolor: '#e9ecef', zerolinecolor: '#e9ecef' },
+                xaxis: { gridcolor: '#e9ecef' },
+                showlegend: false, margin: { t: 50, b: 40, l: 50, r: 20 }, plot_bgcolor: 'rgba(0,0,0,0)', paper_bgcolor: 'rgba(0,0,0,0)'
+            };
+            Plotly.newPlot('boxPlot', [trace1, trace2], boxLayout, {displayModeBar: false});
+
+        } catch (error) {
+            alert("Analiz sırasında hata oluştu. Sunucunun açık olduğundan emin olun.");
+            console.error(error);
+        }
+    }
 </script>
 
 </body>
