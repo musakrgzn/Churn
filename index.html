@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telekom Yönetim Dashboard'u</title>
+    <title>Telecom Management Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -30,7 +30,6 @@
         .guvenli { background-color: #f2f5f8; color: #1D3557; border: 1px solid #d5dfe6; }
         .oran-badge { font-size: 1.1rem; float: right; }
         
-        /* Tablo Stilleri */
         .table-gecmis th { background-color: #f8f9fa; color: #495057; font-weight: 600; }
         .table-gecmis td { vertical-align: middle; }
     </style>
@@ -38,14 +37,14 @@
 <body>
 
 <div class="container mt-4 mb-5">
-    <h2 class="mb-4 text-center fw-bold" style="color: #1D3557;">Yapay Zeka Analiz Merkezi</h2>
+    <h2 class="mb-4 text-center fw-bold" style="color: #1D3557;">AI Analysis Center</h2>
 
     <ul class="nav nav-tabs justify-content-center mb-4" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="tekil-tab" data-bs-toggle="tab" data-bs-target="#tekil" type="button" role="tab">Tekil Müşteri & Veritabanı</button>
+            <button class="nav-link active" id="tekil-tab" data-bs-toggle="tab" data-bs-target="#tekil" type="button" role="tab">Single Customer & Database</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="toplu-tab" data-bs-toggle="tab" data-bs-target="#toplu" type="button" role="tab">Kurumsal Dashboard (CSV)</button>
+            <button class="nav-link" id="toplu-tab" data-bs-toggle="tab" data-bs-target="#toplu" type="button" role="tab">Corporate Dashboard (CSV)</button>
         </li>
     </ul>
 
@@ -56,44 +55,44 @@
                 
                 <div class="col-md-5">
                     <div class="card p-4 h-100">
-                        <h5 class="mb-4 text-secondary">Müşteri Risk Profili Oluşturma</h5>
+                        <h5 class="mb-4 text-secondary">Customer Risk Profiling</h5>
                         <form id="churnForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted small">Aylık Fatura (TL)</label>
+                                    <label class="form-label text-muted small">Monthly Bill</label>
                                     <input type="number" class="form-control form-control-sm" id="fatura" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted small">Süre (Ay)</label>
+                                    <label class="form-label text-muted small">Duration (Months)</label>
                                     <input type="number" class="form-control form-control-sm" id="sure" required>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label text-muted small">Sözleşme Türü</label>
+                                <label class="form-label text-muted small">Contract Type</label>
                                 <select class="form-select form-select-sm" id="sozlesme">
-                                    <option value="Aylik">Aylık Sözleşme</option>
-                                    <option value="Yillik">1 Yıllık Taahhüt</option>
-                                    <option value="Iki_Yillik">2 Yıllık Taahhüt</option>
+                                    <option value="Aylik">Month-to-Month</option>
+                                    <option value="Yillik">1 Year Contract</option>
+                                    <option value="Iki_Yillik">2 Year Contract</option>
                                 </select>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted small">İnternet Altyapısı</label>
+                                    <label class="form-label text-muted small">Internet Infrastructure</label>
                                     <select class="form-select form-select-sm" id="internet">
                                         <option value="Fiber">Fiber</option>
                                         <option value="ADSL">ADSL</option>
-                                        <option value="Yok">Yok</option>
+                                        <option value="Yok">None</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted small">Teknik Destek?</label>
+                                    <label class="form-label text-muted small">Tech Support?</label>
                                     <select class="form-select form-select-sm" id="destek">
-                                        <option value="Evet">Evet</option>
-                                        <option value="Hayir">Hayır</option>
+                                        <option value="Evet">Yes</option>
+                                        <option value="Hayir">No</option>
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" class="btn text-white w-100 mt-2" style="background-color: #1D3557;">Analiz Et ve Kaydet</button>
+                            <button type="submit" class="btn text-white w-100 mt-2" style="background-color: #1D3557;">Analyze and Save</button>
                         </form>
 
                         <div id="sonucAlani" class="sonuc-kutusu mt-3 p-3">
@@ -108,23 +107,23 @@
                 <div class="col-md-7">
                     <div class="card p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="text-secondary mb-0">Son Yapılan Tahminler (Veritabanı)</h5>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="gecmisiGetir()">🔄 Yenile</button>
+                            <h5 class="text-secondary mb-0">Recent Predictions (Database)</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="gecmisiGetir()">🔄 Refresh</button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-sm table-gecmis border">
                                 <thead>
                                     <tr>
-                                        <th>Tarih</th>
-                                        <th>Fatura</th>
-                                        <th>Süre</th>
-                                        <th>Sözleşme</th>
-                                        <th>Yapay Zeka Kararı</th>
+                                        <th>Date</th>
+                                        <th>Bill</th>
+                                        <th>Duration</th>
+                                        <th>Contract</th>
+                                        <th>AI Decision</th>
                                         <th>Risk</th>
                                     </tr>
                                 </thead>
                                 <tbody id="gecmisTablosu">
-                                    <tr><td colspan="6" class="text-center text-muted py-3">Veriler yükleniyor...</td></tr>
+                                    <tr><td colspan="6" class="text-center text-muted py-3">Loading data...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -138,10 +137,10 @@
             <div class="row">
                 <div class="col-md-12 mb-4">
                     <div class="card p-4 text-center">
-                        <h5 class="mb-3 text-secondary">Müşteri Veritabanını (CSV) Yükleyin</h5>
+                        <h5 class="mb-3 text-secondary">Upload Customer Database (CSV)</h5>
                         <div class="d-flex justify-content-center align-items-center gap-3">
                             <input type="file" id="csvDosyasi" accept=".csv" class="form-control w-50">
-                            <button class="btn text-white px-4" style="background-color: #1D3557;" onclick="topluAnalizBaslat()">Raporu Oluştur</button>
+                            <button class="btn text-white px-4" style="background-color: #1D3557;" onclick="topluAnalizBaslat()">Generate Report</button>
                         </div>
                     </div>
                 </div>
@@ -166,7 +165,6 @@
     const colorRisk = '#E63946'; 
     const colorSafe = '#1D3557'; 
 
-    // --- YENİ: VERİTABANINDAN GEÇMİŞİ ÇEKEN FONKSİYON ---
     async function gecmisiGetir() {
         try {
             const response = await fetch("http://127.0.0.1:8000/gecmis");
@@ -174,26 +172,24 @@
             const tablo = document.getElementById("gecmisTablosu");
             
             if (data.length === 0) {
-                tablo.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">Henüz kaydedilmiş bir analiz yok.</td></tr>';
+                tablo.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">No analysis saved yet.</td></tr>';
                 return;
             }
 
-            tablo.innerHTML = ""; // Yükleniyor yazısını temizle
+            tablo.innerHTML = ""; 
 
             data.forEach(kayit => {
-                // Tarihi okunaklı formata çevir (Örn: 24.10.2025 14:30)
                 let tarihObj = new Date(kayit.islem_tarihi);
-                let formatliTarih = tarihObj.toLocaleDateString('tr-TR') + ' ' + tarihObj.toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
+                let formatliTarih = tarihObj.toLocaleDateString('en-US') + ' ' + tarihObj.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
                 
-                // Riskli mi Güvenli mi rozet rengini ayarla
                 let rozetClass = kayit.yapay_zeka_karari.includes("Ayrilacak") ? "bg-danger" : "bg-success";
-                let kararMetni = kayit.yapay_zeka_karari.includes("Ayrilacak") ? "Riskli Profil" : "Güvenli Profil";
+                let kararMetni = kayit.yapay_zeka_karari.includes("Ayrilacak") ? "High Risk" : "Safe Profile";
 
                 let tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td class="text-muted small">${formatliTarih}</td>
-                    <td>${kayit.aylik_fatura} ₺</td>
-                    <td>${kayit.kullanim_suresi} Ay</td>
+                    <td>${kayit.aylik_fatura}</td>
+                    <td>${kayit.kullanim_suresi} Mo.</td>
                     <td>${kayit.sozlesme_turu}</td>
                     <td><span class="badge ${rozetClass}">${kararMetni}</span></td>
                     <td><strong>${kayit.risk_orani}</strong></td>
@@ -201,15 +197,12 @@
                 tablo.appendChild(tr);
             });
         } catch (error) {
-            console.error("Geçmiş alınırken hata oluştu:", error);
+            console.error("Error fetching history:", error);
         }
     }
 
-    // Sayfa ilk yüklendiğinde geçmişi otomatik çek
     document.addEventListener("DOMContentLoaded", gecmisiGetir);
 
-
-    // --- TEKİL MÜŞTERİ SORGULAMA ---
     document.getElementById("churnForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
@@ -240,12 +233,12 @@
             
             if (data.Sistem_Tahmini === "Ayrilacak (CHURN)") {
                 sonucAlani.className = "sonuc-kutusu riskli";
-                tahminMetni.innerText = "⚠️ YÜKSEK RİSK";
+                tahminMetni.innerText = "⚠️ HIGH RISK";
                 ihtimalMetni.innerText = data.Ayrilma_Ihtimali;
                 ihtimalMetni.style.backgroundColor = colorRisk;
             } else {
                 sonucAlani.className = "sonuc-kutusu guvenli";
-                tahminMetni.innerText = "✅ PROFİL GÜVENLİ";
+                tahminMetni.innerText = "✅ SAFE PROFILE";
                 ihtimalMetni.innerText = data.Ayrilma_Ihtimali;
                 ihtimalMetni.style.backgroundColor = colorSafe;
             }
@@ -256,19 +249,17 @@
                 nedenlerListesi.appendChild(li);
             });
 
-            // Yeni analiz yapıldığında tabloyu otomatik yenile!
             gecmisiGetir();
 
         } catch (error) {
-            alert("API bağlantı hatası! Sunucunun çalıştığından emin olun.");
+            alert("API connection error! Make sure the server is running.");
         }
     });
 
-    // --- TOPLU ANALİZ VE GRAFİKLER ---
     async function topluAnalizBaslat() {
         const fileInput = document.getElementById('csvDosyasi');
         if (fileInput.files.length === 0) {
-            alert("Lütfen önce bir CSV dosyası seçin!");
+            alert("Please select a CSV file first!");
             return;
         }
 
@@ -289,14 +280,14 @@
             
             let pieData = [{
                 values: [ayrilacakCount, kalacakCount],
-                labels: ['Riskli Profil', 'Güvenli Profil'],
+                labels: ['High Risk Profile', 'Safe Profile'],
                 type: 'pie',
                 hole: 0.55,
                 textinfo: 'percent',
                 marker: { colors: [colorRisk, colorSafe], line: { width: 3, color: '#ffffff' } }
             }];
             let pieLayout = {
-                title: { text: 'Genel Risk Dağılımı', font: {size: 16, color: '#495057'} },
+                title: { text: 'Overall Risk Distribution', font: {size: 16, color: '#495057'} },
                 showlegend: true, legend: { orientation: "h", y: -0.1 }, margin: { t: 50, b: 20, l: 20, r: 20 }
             };
             Plotly.newPlot('pieChart', pieData, pieLayout, {displayModeBar: false});
@@ -304,19 +295,19 @@
             let faturaAyrilan = data.filter(d => d.Tahmin_Sonucu === "Ayrilacak").map(d => d.Aylik_Fatura);
             let faturaKalan = data.filter(d => d.Tahmin_Sonucu === "Kalacak").map(d => d.Aylik_Fatura);
 
-            let trace1 = { y: faturaAyrilan, type: 'box', name: 'Riskli Müşteriler', marker: {color: colorRisk}, line: {width: 2} };
-            let trace2 = { y: faturaKalan, type: 'box', name: 'Güvenli Müşteriler', marker: {color: colorSafe}, line: {width: 2} };
+            let trace1 = { y: faturaAyrilan, type: 'box', name: 'High Risk Customers', marker: {color: colorRisk}, line: {width: 2} };
+            let trace2 = { y: faturaKalan, type: 'box', name: 'Safe Customers', marker: {color: colorSafe}, line: {width: 2} };
             
             let boxLayout = {
-                title: { text: 'Aylık Faturaya Göre Segmentasyon', font: {size: 16, color: '#495057'} },
-                yaxis: { title: 'Aylık Fatura (TL)', gridcolor: '#e9ecef', zerolinecolor: '#e9ecef' },
+                title: { text: 'Segmentation by Monthly Bill', font: {size: 16, color: '#495057'} },
+                yaxis: { title: 'Monthly Bill', gridcolor: '#e9ecef', zerolinecolor: '#e9ecef' },
                 xaxis: { gridcolor: '#e9ecef' },
                 showlegend: false, margin: { t: 50, b: 40, l: 50, r: 20 }, plot_bgcolor: 'rgba(0,0,0,0)', paper_bgcolor: 'rgba(0,0,0,0)'
             };
             Plotly.newPlot('boxPlot', [trace1, trace2], boxLayout, {displayModeBar: false});
 
         } catch (error) {
-            alert("Analiz sırasında hata oluştu. Sunucunun açık olduğundan emin olun.");
+            alert("Error during analysis. Make sure the server is running.");
             console.error(error);
         }
     }
